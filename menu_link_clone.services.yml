@@ -1,0 +1,6 @@
+services:
+  menu_link_clone.route_subscriber:
+    class: Drupal\menu_link_clone\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

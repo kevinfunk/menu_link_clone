@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Contains menu_link_clone.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function menu_link_clone_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the menu_link_clone module.
+    case 'help.page.menu_link_clone':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Admin created menu link item cloning process.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<p>' . t('Provides a checkbox on menu clone form that gives you permission to clone the menu links created by Admin.') . '</p>';
+      $output .= '<h3>' . t('Restrictions') . '</h3>';
+      $output .= '<p>' . t('We can only clone menu link items created by Admin (Not system generated menu link items).') . '</p>';
+      return $output;
+
+    default:
+      return;
+
+  }
+
+}
