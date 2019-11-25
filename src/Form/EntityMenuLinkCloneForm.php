@@ -11,12 +11,6 @@ use Drupal\Core\Url;
  * Provides a menu link clone form.
  */
 class EntityMenuLinkCloneForm extends EntityCloneForm {
-  /**
-   * The entity type définition.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityTypeDefinition;
 
   /**
    * {@inheritdoc}
@@ -44,12 +38,12 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
       $destMenuId = $form_state->getValue('id');
       $sourceMenuExistence = $this->menuLinksAvailabilityCheck($sourceMenuId);
       if (!$sourceMenuExistence) {
-        $this->messenger->addMessage($this->stringTranslationManager->translate('Menu links are not available in ' . $this->entity->label() . ' created by admin.'));
+        $this->messenger->addMessage($this->stringTranslationManager->translate('Self(Admin) created menu links are not available in ' . $this->entity->label() . ' menu.'));
       }
       else {
         $result = $this->cloneMenuLinks($sourceMenuId, $destMenuId);
         if ($result) {
-          $this->messenger->addMessage($this->stringTranslationManager->translate('Links are cloned successfully for ' . $form_state->getValue('label') . '.'));
+          $this->messenger->addMessage($this->stringTranslationManager->translate('Self(Admin) created Links are cloned successfully for ' . $form_state->getValue('label') . ' menu.'));
         }
         else {
           $this->messenger->addMessage($this->stringTranslationManager->translate('Unsuccessfull to clone links for ' . $form_state->getValue('label') . ', Please try again or contact to site admin.'));
@@ -70,10 +64,9 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    */
   protected function cloneMenuLinks($source_menu_name, $target_menu_name) {
     $result = FALSE;
-    $menuLinkIds = $this->getMenuItemIds($source_menu_name);
-    if ($menuLinkIds['status']) {
-      $menuLinks = MenuLinkContent::loadMultiple($menuLinkIds['items']);
-      $data = $this->resetLinkItems($menuLinks);
+    $menuLinkItems = $this->getMenuItems($source_menu_name);
+    if ($menuLinkItems['status']) {
+      $data = $this->resetLinkItems($menuLinkItems['items']);
       $data = $this->setUuidForMenuItems($data, $target_menu_name);
       $data = $this->createMenuLinkClone($data);
       if ($data) {
@@ -96,16 +89,15 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    * Get menu items ids.
    *
    * @param string $menu_id
-   *   Menu name for which we need to check their items ids.
+   *   Menu name for which we can get there items.
    */
-  protected function getMenuItemIds($menu_id) {
+  protected function getMenuItems($menu_id) {
     $result = [];
-    $menuLinkIds = \Drupal::entityQuery('menu_link_content')
-      ->condition('menu_name', $menu_id)
-      ->execute();
-    if (isset($menuLinkIds) && !empty($menuLinkIds)) {
+    $storage = \Drupal::entityManager()->getStorage('menu_link_content');
+    $menuLinkItems = $storage->loadByProperties(['menu_name' => $menu_id]);
+    if (isset($menuLinkItems) && !empty($menuLinkItems)) {
       $result['status'] = TRUE;
-      $result['items'] = $menuLinkIds;
+      $result['items'] = $menuLinkItems;
     }
     else {
       $result['status'] = FALSE;
@@ -123,8 +115,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
   protected function menuLinksAvailabilityCheck($source_menu_id) {
     $result = FALSE;
     if (isset($source_menu_id) && !empty($source_menu_id)) {
-      $menuLinkIds = $this->getMenuItemIds($source_menu_id);
-      if ($menuLinkIds['status']) {
+      $menuLinkItems = $this->getMenuItems($source_menu_id);
+      if ($menuLinkItems['status']) {
         $result = TRUE;
       }
     }
