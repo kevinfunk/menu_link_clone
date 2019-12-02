@@ -10,7 +10,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  *
  * @group menu_link_clone
  */
-class EntityCloneMenuLinkTest extends WebTestBase {
+class MenuLinkCloneTest extends WebTestBase {
 
   /**
    * Modules to enable.
