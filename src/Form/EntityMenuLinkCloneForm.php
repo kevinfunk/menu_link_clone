@@ -178,12 +178,14 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
   protected function createMenuLinkClone($menu_links_object_multiple) {
     $result = FALSE;
     foreach ($menu_links_object_multiple as $id => $menu) {
-      unset($menu['revision_id']);
-      unset($menu['bundle']);
-      $save_menu = MenuLinkContent::create($menu);
-      $save_menu->save();
-      if ($save_menu) {
-        $result = TRUE;
+      if(isset($id) && !empty($id)) {
+        unset($menu['revision_id']);
+        unset($menu['bundle']);
+        $save_menu = MenuLinkContent::create($menu);
+        $save_menu->save();
+        if ($save_menu) {
+          $result = TRUE;
+        }
       }
     }
     return $result;
