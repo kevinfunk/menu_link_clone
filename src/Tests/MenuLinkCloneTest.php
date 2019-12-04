@@ -58,7 +58,7 @@ class MenuLinkCloneTest extends WebTestBase {
       ]);
     $menu = reset($menus);
 
-    //Custom menu link
+    // Custom menu link.
     $menu_link = MenuLinkContent::create([
       'title' => 'Test',
       'link' => ['uri' => 'internal:/'],
