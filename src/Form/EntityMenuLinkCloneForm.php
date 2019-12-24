@@ -14,6 +14,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
 
   /**
    * {@inheritdoc}
+   * @return array
+   *   A render form array for a page.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
@@ -61,6 +63,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *   Source menu name from we need to clone the menu items.
    * @param string $target_menu_name
    *   Destination menu name to clone the menu items.
+   * @return boolean
+   *   Return the True or False.
    */
   protected function cloneMenuLinks($source_menu_name, $target_menu_name) {
     $result = FALSE;
@@ -78,6 +82,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
 
   /**
    * Genereate UUID (Everytime gives you new unique ids.).
+   * @return string
+   *   Return the hash string called uuid.
    */
   protected function genUuid() {
     $uuid_service = \Drupal::service('uuid');
@@ -90,10 +96,12 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *
    * @param string $menu_id
    *   Menu name for which we can get there items.
+   * @return array
+   *   Retrun array with there menu items tree.
    */
   protected function getMenuItems($menu_id) {
     $result = [];
-    $storage = \Drupal::entityManager()->getStorage('menu_link_content');
+    $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
     $menuLinkItems = $storage->loadByProperties(['menu_name' => $menu_id]);
     if (isset($menuLinkItems) && !empty($menuLinkItems)) {
       $result['status'] = TRUE;
@@ -111,6 +119,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *
    * @param string $source_menu_id
    *   Menu name for which we need to check their items.
+   * @return boolean
+   *   Return True and False.
    */
   protected function menuLinksAvailabilityCheck($source_menu_id) {
     $result = FALSE;
@@ -128,6 +138,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *
    * @param object $menu_links_object_multiple
    *   Menu Items Object.
+   * @return array
+   *   Retrun array with there menu items tree.
    */
   protected function resetLinkItems($menu_links_object_multiple) {
     $result = [];
@@ -150,6 +162,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *   Menu Items Object.
    * @param string $target_menu_name
    *   Menu Name for which we need to set UUID.
+   * @return array
+   *   Retrun array with there menu items tree.
    */
   protected function setUuidForMenuItems($menu_links_object_multiple, $target_menu_name) {
     $uuid_map = [];
@@ -174,6 +188,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *
    * @param object $menu_links_object_multiple
    *   Menu Items Object.
+   * @return array
+   *   Retrun array with there menu items tree.
    */
   protected function createMenuLinkClone($menu_links_object_multiple) {
     $result = FALSE;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\menu_link_clone\Tests;
+namespace Drupal\Tests\menu_link_clone\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  *
  * @group menu_link_clone
  */
-class MenuLinkCloneTest extends WebTestBase {
+class MenuLinkCloneTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -93,3 +93,4 @@ class MenuLinkCloneTest extends WebTestBase {
   }
 
 }
+
