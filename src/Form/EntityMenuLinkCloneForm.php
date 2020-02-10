@@ -155,7 +155,8 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *
    * @param string $source_menu_id
    *   Menu name for which we need to check their items.
-   * @return boolean
+   *
+   * @return bool
    *   Return True and False.
    */
   protected function menuLinksAvailabilityCheck($source_menu_id) {
