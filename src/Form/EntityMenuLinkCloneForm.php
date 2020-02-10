@@ -8,6 +8,11 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Url;
 use Drupal\Component\Uuid\Php;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslationManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\Core\Messenger\Messenger;
 
 /**
  * Provides a menu link clone form.
@@ -51,7 +56,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    * @param \Drupal\Component\Uuid\Php $uuid_interface
    *   Generate unique id(uuid).
    */
-  public function __construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger, Php $uuid_interface) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, TranslationManager $string_translation, EventDispatcherInterface $eventDispatcher, Messenger $messenger, Php $uuid_interface) {
     parent::__construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger);
     $this->uuidinterface = $uuid_interface;
   }
