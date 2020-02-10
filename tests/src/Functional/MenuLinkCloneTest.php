@@ -50,12 +50,8 @@ class MenuLinkCloneTest extends BrowserTestBase {
    * Test menu link clone.
    */
   public function testMenuLinkClone() {
-
-    $menus = \Drupal::entityTypeManager()
-      ->getStorage('menu')
-      ->loadByProperties([
-        'id' => 'account',
-      ]);
+    $entityTypeManager = $this->container->get('entity_type.manager');
+    $menus = $entityTypeManager->getStorage('menu')->loadByProperties(['id' => 'account']);
     $menu = reset($menus);
 
     // Custom menu link.
@@ -75,19 +71,11 @@ class MenuLinkCloneTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('entity_clone/menu/' . $menu->id(), $edit, t('Clone'));
 
-    $menus = \Drupal::entityTypeManager()
-      ->getStorage('menu')
-      ->loadByProperties([
-        'id' => $edit['id'],
-      ]);
+    $menus = $entityTypeManager->getStorage('menu')->loadByProperties(['id' => $edit['id']]);
     $menu = reset($menus);
     $this->assertTrue($menu, 'Test menu cloned found in database.');
 
-    $menuLink = \Drupal::entityTypeManager()
-      ->getStorage('menu_link_content')
-      ->loadByProperties([
-        'menu_name' => $edit['id'],
-      ]);
+    $menuLink = $entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $edit['id']]);
     $menuLink = reset($menuLink);
     $this->assertTrue($menuLink, "Menu link found in database for Test menu cloned");
   }
