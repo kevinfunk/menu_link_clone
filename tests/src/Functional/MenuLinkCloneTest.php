@@ -12,10 +12,10 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  */
 class MenuLinkCloneTest extends BrowserTestBase {
 
-   /**
-    * {@inheritdoc}
-    */
-   protected $defaultTheme = 'stark';
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Modules to enable.
