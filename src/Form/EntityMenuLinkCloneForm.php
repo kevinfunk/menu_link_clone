@@ -6,11 +6,52 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_clone\Form\EntityCloneForm;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Url;
+use Drupal\Component\Uuid\Php;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a menu link clone form.
  */
 class EntityMenuLinkCloneForm extends EntityCloneForm {
+
+  /**
+   * Generate unique id(uuid).
+   *
+   * @var \Drupal\administerusersbyrole\Services\AccessManagerInterface
+   */
+  protected $uuidinterface;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('current_route_match'),
+      $container->get('string_translation'),
+      $container->get('event_dispatcher'),
+      $container->get('messenger'),
+      $container->get('uuid')
+    );
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match service.
+   * @param \Drupal\Core\StringTranslation\TranslationManager $string_translation
+   *   The string translation manager.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher service.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger service.
+   * @param \Drupal\Component\Uuid\Php $uuid_interface
+   */
+  public function __construct($entity_type_manager, $route_match,  $string_translation, $eventDispatcher, $messenger, Php $uuid_interface) {
+    parent::__construct($entity_type_manager, $route_match,  $string_translation, $eventDispatcher, $messenger);
+    $this->uuidinterface = $uuid_interface;
+  }
 
   /**
    * {@inheritdoc}
@@ -81,17 +122,6 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
   }
 
   /**
-   * Genereate UUID (Everytime gives you new unique ids.).
-   * @return string
-   *   Return the hash string called uuid.
-   */
-  protected function genUuid() {
-    $uuid_service = \Drupal::service('uuid');
-    $uuid = $uuid_service->generate();
-    return $uuid;
-  }
-
-  /**
    * Get menu items ids.
    *
    * @param string $menu_id
@@ -101,9 +131,9 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    */
   protected function getMenuItems($menu_id) {
     $result = [];
-    $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+    $storage = $this->entityTypeManager->getStorage('menu_link_content');
     $menuLinkItems = $storage->loadByProperties(['menu_name' => $menu_id]);
-    if (isset($menuLinkItems) && !empty($menuLinkItems)) {
+    if (!empty($menuLinkItems)) {
       $result['status'] = TRUE;
       $result['items'] = $menuLinkItems;
     }
@@ -124,7 +154,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    */
   protected function menuLinksAvailabilityCheck($source_menu_id) {
     $result = FALSE;
-    if (isset($source_menu_id) && !empty($source_menu_id)) {
+    if (!empty($source_menu_id)) {
       $menuLinkItems = $this->getMenuItems($source_menu_id);
       if ($menuLinkItems['status']) {
         $result = TRUE;
@@ -146,6 +176,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
     foreach ($menu_links_object_multiple as $link) {
       if (!empty($link)) {
         $linkArray = $link->toArray();
+        $linkData = [];
         foreach ($linkArray as $key => $linkArrayItem) {
           $linkData[$key] = reset($linkArrayItem);
         }
@@ -171,7 +202,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
     foreach ($menu_links_object_multiple as $id => $menu) {
       $uuid = $menu['uuid']['value'];
       // Assume uuid is not duplicated here.
-      $new_uuid = $this->genUuid();
+      $new_uuid = $new_uuid = $this->uuidinterface->generate();
       $uuid_map['menu_link_content:' . $uuid] = 'menu_link_content:' . $new_uuid;
       $menu_links_object_multiple[$id]['uuid'] = $new_uuid;
       unset($menu_links_object_multiple[$id]['id']);

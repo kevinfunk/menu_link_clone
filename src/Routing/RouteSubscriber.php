@@ -31,11 +31,10 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type_id == 'menu') {
-        if ($route = $collection->get("entity.$entity_type_id.clone_form")) {
-          $route->setDefault('_form', '\Drupal\menu_link_clone\Form\EntityMenuLinkCloneForm');
-        }
+    $menu = $this->entityTypeManager->getDefinition('menu')->id();
+    if ($menu) {
+      if ($route = $collection->get("entity.$menu.clone_form")) {
+        $route->setDefault('_form', '\Drupal\menu_link_clone\Form\EntityMenuLinkCloneForm');
       }
     }
   }
