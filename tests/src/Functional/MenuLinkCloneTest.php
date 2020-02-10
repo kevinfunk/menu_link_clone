@@ -73,11 +73,11 @@ class MenuLinkCloneTest extends BrowserTestBase {
 
     $menus = $entityTypeManager->getStorage('menu')->loadByProperties(['id' => $edit['id']]);
     $menu = reset($menus);
-    $this->assertTrue($menu, 'Test menu cloned found in database.');
+    $this->assertNotEmpty($menu, 'Test menu cloned found in database.');
 
     $menuLink = $entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $edit['id']]);
     $menuLink = reset($menuLink);
-    $this->assertTrue($menuLink, "Menu link found in database for Test menu cloned");
+    $this->assertNotEmpty($menuLink, "Menu link found in database for Test menu cloned");
   }
 
 }
