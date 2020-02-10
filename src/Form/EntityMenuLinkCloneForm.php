@@ -51,7 +51,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    * @param \Drupal\Component\Uuid\Php $uuid_interface
    *   Generate unique id(uuid).
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, TranslationManager $string_translation, EventDispatcherInterface $eventDispatcher, Messenger $messenger, Php $uuid_interface) {
+  public function __construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger, Php $uuid_interface) {
     parent::__construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger);
     $this->uuidinterface = $uuid_interface;
   }
