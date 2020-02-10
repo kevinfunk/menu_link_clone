@@ -1,0 +1,16 @@
+{
+  "name": "drupal/menu_link_clone",
+  "description": "Allows clone the menu items.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/menu_link_clone",
+  "support": {
+    "issues": "https://www.drupal.org/project/menu_link_clone",
+    "source": "https://cgit.drupalcode.org/menu_link_clone"
+  },
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "drupal/entity_clone": "^1.0",
+    "drupal/core": "^8 || ^9"
+}
