@@ -4,7 +4,7 @@
   "type": "drupal-module",
   "homepage": "https://www.drupal.org/project/menu_link_clone",
   "support": {
-    "issues": "https://www.drupal.org/project/menu_link_clone",
+    "issues": "https://www.drupal.org/project/issues/menu_link_clone",
     "source": "https://cgit.drupalcode.org/menu_link_clone"
   },
   "license": "GPL-2.0+",
