@@ -13,4 +13,5 @@
   "require": {
     "drupal/entity_clone": "^1.0",
     "drupal/core": "^8 || ^9"
+  }
 }
