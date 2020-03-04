@@ -13,11 +13,14 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a menu link clone form.
  */
 class EntityMenuLinkCloneForm extends EntityCloneForm {
+
+  use StringTranslationTrait;
 
   /**
    * Generate unique id(uuid).
@@ -90,19 +93,19 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
       $destMenuId = $form_state->getValue('id');
       $sourceMenuExistence = $this->menuLinksAvailabilityCheck($sourceMenuId);
       if (!$sourceMenuExistence) {
-        $this->messenger->addMessage($this->stringTranslationManager->translate('Self(Admin) created menu links are not available in ' . $this->entity->label() . ' menu.'));
+        $this->messenger->addMessage($this->t('Self(Admin) created menu links are not available in @label menu.', ['@label' => $this->entity->label()]));
       }
       else {
         $result = $this->cloneMenuLinks($sourceMenuId, $destMenuId);
         if ($result) {
-          $this->messenger->addMessage($this->stringTranslationManager->translate('Self(Admin) created Links are cloned successfully for ' . $form_state->getValue('label') . ' menu.'));
+          $this->messenger->addMessage($this->t('Self(Admin) created Links are cloned successfully for @label menu.', ['@label' => $form_state->getValue('label')]));
         }
         else {
-          $this->messenger->addMessage($this->stringTranslationManager->translate('Unsuccessfull to clone links for ' . $form_state->getValue('label') . ', Please try again or contact to site admin.'));
+          $this->messenger->addMessage($this->t('Unsuccessfull to clone links for @label, Please try again or contact to site admin.', ['@label' => $form_state->getValue('label')]));
         }
       }
     }
-    $response = Url::fromUserInput('/admin/structure/menu');
+    $response = Url::fromRoute('entity.menu.collection');
     $form_state->setRedirectUrl($response);
   }
 
@@ -216,7 +219,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
     foreach ($menu_links_object_multiple as $id => $menu) {
       $uuid = $menu['uuid']['value'];
       // Assume uuid is not duplicated here.
-      $new_uuid = $new_uuid = $this->uuidinterface->generate();
+      $new_uuid = $this->uuidinterface->generate();
       $uuid_map['menu_link_content:' . $uuid] = 'menu_link_content:' . $new_uuid;
       $menu_links_object_multiple[$id]['uuid'] = $new_uuid;
       unset($menu_links_object_multiple[$id]['id']);
