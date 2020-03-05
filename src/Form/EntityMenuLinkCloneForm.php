@@ -74,7 +74,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
     $form = parent::buildForm($form, $form_state);
     $form['clone_links'] = [
       '#type'          => 'checkbox',
-      '#title'         => t('Clone with Links'),
+      '#title'         => $this->t('Clone with Links'),
       '#required'      => FALSE,
       '#default_value' => FALSE,
       '#weight'  => 0,
