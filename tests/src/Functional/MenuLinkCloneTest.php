@@ -74,7 +74,7 @@ class MenuLinkCloneTest extends BrowserTestBase {
       'id' => 'test_menu_cloned',
       'clone_links' => TRUE,
     ];
-    $this->drupalPostForm('entity_clone/menu/' . $menu->id(), $edit, t('Clone'));
+    $this->drupalPostForm('entity_clone/menu/' . $menu->id(), $edit, 'Clone');
 
     $menus = $entityTypeManager->getStorage('menu')->loadByProperties(['id' => $edit['id']]);
     $menu = reset($menus);
