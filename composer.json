@@ -11,7 +11,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "drupal/entity_clone": "^1.0",
+    "drupal/entity_clone": "^1.0 || ^2.0",
     "drupal/core": "^8 || ^9"
   }
 }
