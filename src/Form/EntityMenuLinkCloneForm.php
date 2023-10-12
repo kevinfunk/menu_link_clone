@@ -2,17 +2,20 @@
 
 namespace Drupal\menu_link_clone\Form;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\entity_clone\EntityCloneSettingsManager;
 use Drupal\entity_clone\Form\EntityCloneForm;
+use Drupal\entity_clone\Services\EntityCloneServiceProvider;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Url;
-use Drupal\Component\Uuid\Php;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -25,7 +28,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
   /**
    * Generate unique id(uuid).
    *
-   * @var \Drupal\administerusersbyrole\Services\AccessManagerInterface
+   * @var \Drupal\Component\Uuid\UuidInterface
    */
   protected $uuidinterface;
 
@@ -39,7 +42,10 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
       $container->get('string_translation'),
       $container->get('event_dispatcher'),
       $container->get('messenger'),
-      $container->get('uuid')
+      $container->get('uuid'),
+      $container->get('current_user'),
+      $container->get('entity_clone.settings.manager'),
+      $container->get('entity_clone.service_provider')
     );
   }
 
@@ -54,13 +60,19 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
    *   The string translation manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher service.
-   * @param \Drupal\Core\Messenger\Messenger $messenger
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Component\Uuid\Php $uuid_interface
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_interface
    *   Generate unique id(uuid).
+   *  @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
+   * @param \Drupal\entity_clone\EntityCloneSettingsManager $entity_clone_settings_manager
+   *   The entity clone settings manager.
+   * @param \Drupal\entity_clone\Services\EntityCloneServiceProvider $service_provider
+   *   The Service Provider that verifies if entity has ownership.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, TranslationManager $string_translation, EventDispatcherInterface $eventDispatcher, Messenger $messenger, Php $uuid_interface) {
-    parent::__construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, TranslationManager $string_translation, EventDispatcherInterface $eventDispatcher, MessengerInterface $messenger, UuidInterface $uuid_interface, AccountProxyInterface $current_user, EntityCloneSettingsManager $entity_clone_settings_manager, EntityCloneServiceProvider $service_provider) {
+    parent::__construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger, $current_user, $entity_clone_settings_manager, $service_provider);
     $this->uuidinterface = $uuid_interface;
   }
 
