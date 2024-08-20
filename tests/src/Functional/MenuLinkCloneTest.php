@@ -22,7 +22,7 @@ class MenuLinkCloneTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_clone', 'menu_ui', 'menu_link_clone'];
+  protected static $modules = ['entity_clone', 'menu_ui', 'menu_link_clone'];
 
   /**
    * Permissions to grant admin user.
@@ -44,7 +44,7 @@ class MenuLinkCloneTest extends BrowserTestBase {
   /**
    * Sets the test up.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
@@ -74,7 +74,8 @@ class MenuLinkCloneTest extends BrowserTestBase {
       'id' => 'test_menu_cloned',
       'clone_links' => TRUE,
     ];
-    $this->drupalPostForm('entity_clone/menu/' . $menu->id(), $edit, 'Clone');
+    $this->drupalGet('entity_clone/menu/' . $menu->id());
+    $this->submitForm($edit, 'Clone');
 
     $menus = $entityTypeManager->getStorage('menu')->loadByProperties(['id' => $edit['id']]);
     $menu = reset($menus);

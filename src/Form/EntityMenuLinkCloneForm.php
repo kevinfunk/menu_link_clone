@@ -6,13 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_clone\Form\EntityCloneForm;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Url;
-use Drupal\Component\Uuid\Php;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslationManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -23,45 +17,19 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
   use StringTranslationTrait;
 
   /**
-   * Generate unique id(uuid).
+   * Generate unique id (uuid).
    *
-   * @var \Drupal\administerusersbyrole\Services\AccessManagerInterface
+   * @var \Drupal\Component\Uuid\UuidInterface
    */
-  protected $uuidinterface;
+  protected $uuid;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('current_route_match'),
-      $container->get('string_translation'),
-      $container->get('event_dispatcher'),
-      $container->get('messenger'),
-      $container->get('uuid')
-    );
-  }
-
-  /**
-   * Constructs a clone menu lines with parent construct.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match service.
-   * @param \Drupal\Core\StringTranslation\TranslationManager $string_translation
-   *   The string translation manager.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   The event dispatcher service.
-   * @param \Drupal\Core\Messenger\Messenger $messenger
-   *   The messenger service.
-   * @param \Drupal\Component\Uuid\Php $uuid_interface
-   *   Generate unique id(uuid).
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, TranslationManager $string_translation, EventDispatcherInterface $eventDispatcher, Messenger $messenger, Php $uuid_interface) {
-    parent::__construct($entity_type_manager, $route_match, $string_translation, $eventDispatcher, $messenger);
-    $this->uuidinterface = $uuid_interface;
+    $instance = parent::create($container);
+    $instance->uuid = $container->get('uuid');
+    return $instance;
   }
 
   /**
@@ -219,7 +187,7 @@ class EntityMenuLinkCloneForm extends EntityCloneForm {
     foreach ($menu_links_object_multiple as $id => $menu) {
       $uuid = $menu['uuid']['value'];
       // Assume uuid is not duplicated here.
-      $new_uuid = $this->uuidinterface->generate();
+      $new_uuid = $this->uuid->generate();
       $uuid_map['menu_link_content:' . $uuid] = 'menu_link_content:' . $new_uuid;
       $menu_links_object_multiple[$id]['uuid'] = $new_uuid;
       unset($menu_links_object_multiple[$id]['id']);

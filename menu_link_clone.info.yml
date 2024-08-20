@@ -1,7 +1,6 @@
 name: Menu Link Clone
 description: Add a clone with link action for all menus
-core:  "8.x"
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9.1 || ^10
 type: module
 dependencies:
   - entity_clone:entity_clone
